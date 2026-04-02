@@ -23,7 +23,7 @@ pair<double,double> swann(double x0, const double &t, bool print = true){
         if(print)
             cout<<"(3.0) f(x.0-t)>=f(x.0)<=f(x.0+t) -> [a.0; b.0] = ["<<x0-t<<"; "<<x0+t<<"]"<<endl;
         return ab;}
-    if((10*(x0-t)*log(x0-t) - pow(x0-t,2)/2.0)>=(10*(x0)*log(x0) - pow(x0,2)/2.0) and (10*(x0)*log(x0) - pow(x0,2)/2.0)<=(10*(x0+t)*log(x0+t) - pow(x0+t,2)/2.0))
+    if((10*(x0-t)*log(x0-t) - pow(x0-t,2)/2.0)<=(10*(x0)*log(x0) - pow(x0,2)/2.0) and (10*(x0)*log(x0) - pow(x0,2)/2.0)>=(10*(x0+t)*log(x0+t) - pow(x0+t,2)/2.0))
         throw invalid_argument("The function is not unimodal, so it is recommended to set a different starting point!");
     if(print)
         cout<<"(3.0) the termination condition is not met;"<<endl;
