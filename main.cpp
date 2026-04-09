@@ -2,7 +2,19 @@
 #include <math.h>
 using namespace std;
 
+double f(double x)
+{
+    if(isnan(10*(x)*log(x) - pow(x,2)/2.0))
+        throw invalid_argument("the function is undefined at x = "+to_string(x));
+    return 10*(x)*log(x) - pow(x,2)/2.0;
+}
+
 pair<double,double> swann(double x0, const double &t, bool print = true){
+    //x0 - это либо x0, либо x<k-1>
+    //x1 - это либо x1, либо x<k>
+    //x2 - это либо x2, либо x<k+1>
+
+
     if(t<=0)
         throw invalid_argument("t must be non-negative!");
 
@@ -13,17 +25,17 @@ pair<double,double> swann(double x0, const double &t, bool print = true){
 
     //2 пункт
     if(print)
-        cout<<"(2.0) f(x.0-t) = "<<(10*(x0-t)*log(x0-t) - pow(x0-t,2)/2.0)<<
-              "; f(x.0) = "<<(10*(x0)*log(x0) - pow(x0,2)/2.0)<<
-              "; f(x.0+t) = "<<(10*(x0+t)*log(x0+t) - pow(x0+t,2)/2.0)<<";"<<endl;
+        cout<<"(2.0) f(x.0-t) = "<<f(x0-t)<<
+              "; f(x.0) = "<<f(x0)<<
+              "; f(x.0+t) = "<<f(x0+t)<<";"<<endl;
 
     //3 пункт
-    if((10*(x0-t)*log(x0-t) - pow(x0-t,2)/2.0)>=(10*(x0)*log(x0) - pow(x0,2)/2.0) and (10*(x0)*log(x0) - pow(x0,2)/2.0)<=(10*(x0+t)*log(x0+t) - pow(x0+t,2)/2.0)){
+    if(f(x0-t)>=f(x0) and f(x0)<=f(x0+t)){
         pair<double,double> ab = make_pair(x0-t, x0+t);
         if(print)
             cout<<"(3.0) f(x.0-t)>=f(x.0)<=f(x.0+t) -> [a.0; b.0] = ["<<x0-t<<"; "<<x0+t<<"]"<<endl;
         return ab;}
-    if((10*(x0-t)*log(x0-t) - pow(x0-t,2)/2.0)<=(10*(x0)*log(x0) - pow(x0,2)/2.0) and (10*(x0)*log(x0) - pow(x0,2)/2.0)>=(10*(x0+t)*log(x0+t) - pow(x0+t,2)/2.0))
+    if(f(x0-t)<=f(x0) and f(x0)>=f(x0+t))
         throw invalid_argument("The function is not unimodal, so it is recommended to set a different starting point!");
     if(print)
         cout<<"(3.0) the termination condition is not met;"<<endl;
@@ -32,7 +44,7 @@ pair<double,double> swann(double x0, const double &t, bool print = true){
     double delta;
     pair<double,double> ab = make_pair(0,0);
     double x1;
-    if((10*(x0-t)*log(x0-t) - pow(x0-t,2)/2.0)>=(10*(x0)*log(x0) - pow(x0,2)/2.0) and (10*(x0)*log(x0) - pow(x0,2)/2.0)>=(10*(x0+t)*log(x0+t) - pow(x0+t,2)/2.0)){
+    if(f(x0-t)>=f(x0) and f(x0)>=f(x0+t)){
         delta = t;
         ab.first = x0;
         x1 = x0+t;
@@ -40,7 +52,7 @@ pair<double,double> swann(double x0, const double &t, bool print = true){
         if(print)
             cout<<"(4.0) f(x.0-t)>=f(x.0)>=f(x.0+t) -> delta = "<<t<<"; a0 = "<<x0<<"; x.1 = "<<x0+t<<"; k = "<<1<<";"<<endl;
     }
-    if((10*(x0-t)*log(x0-t) - pow(x0-t,2)/2.0)<=(10*(x0)*log(x0) - pow(x0,2)/2.0) and (10*(x0)*log(x0) - pow(x0,2)/2.0)<=(10*(x0+t)*log(x0+t) - pow(x0+t,2)/2.0)){
+    if(f(x0-t)<=f(x0) and f(x0)<=f(x0+t)){
         delta = -t;
         ab.second = x0;
         x1 = x0 - t;
@@ -59,22 +71,22 @@ pair<double,double> swann(double x0, const double &t, bool print = true){
             cout<<"(5."<<iterations<<") x."<<k+1<<" = "<<x2<<";"<<endl;
 
         //6 пункт
-        if((10*(x2)*log(x2) - pow(x2,2)/2.0)<(10*(x1)*log(x1) - pow(x1,2)/2.0) and delta == t){
+        if(f(x2)<f(x1) and delta == t){
             ab.first = x1;
             k = k+1;
             if(print)
                 cout<<"(6."<<iterations<<") a.0 = "<<x0<<"; k = "<<k<<";"<<endl;
         }
-        if((10*(x2)*log(x2) - pow(x2,2)/2.0)<(10*(x1)*log(x1) - pow(x1,2)/2.0) and delta == -t){
+        if(f(x2)<f(x1) and delta == -t){
             ab.second = x0;
             k = k+1;
             if(print)
                 cout<<"(6."<<iterations<<") b.0 = "<<x0<<"; k = "<<k<<";"<<endl;
         }
-        if((10*(x2)*log(x2) - pow(x2,2)/2.0)>=(10*(x1)*log(x1) - pow(x1,2)/2.0)){
+        if(f(x2)>=f(x1)){
             end = true;
             if(delta == t)
-                ab.second = x0;
+                ab.second = x2;
             if(delta == -t)
                 ab.first = x2;
             if(print)
@@ -117,11 +129,11 @@ double gold(pair<double,double> ab, double l, bool print = true){
     do{
         //4 пункт
         if(print)
-            cout<<"(4."<<iterations<<") f(y."<<k<<") = "<<(10*(y0)*log(y0) - pow(y0,2)/2.0)<<
-                  "; f(z."<<k<<") = "<<(10*(z0)*log(z0) - pow(z0,2)/2.0)<<";"<<endl;
+            cout<<"(4."<<iterations<<") f(y."<<k<<") = "<<f(y0)<<
+                  "; f(z."<<k<<") = "<<f(z0)<<";"<<endl;
 
         //5 пункт
-        if((10*(y0)*log(y0) - pow(y0,2)/2.0)<=(10*(z0)*log(z0) - pow(z0,2)/2.0)){
+        if(f(y0)<=f(z0)){
             ab.first = ab.first;
             ab.second = z0;
             y1 = ab.first + ab.second - y0;
@@ -129,7 +141,7 @@ double gold(pair<double,double> ab, double l, bool print = true){
             if(print)
                 cout<<"(5."<<iterations<<") f("<<y0<<") <= f("<<z0<<") -> L0 = ["<<ab.first<<"; "<<ab.second<<"]; y."<<k+1<<" = "<<y1<<"; z."<<k+1<<" = "<<z1<<";"<<endl;
         }
-        if((10*(y0)*log(y0) - pow(y0,2)/2.0)>(10*(z0)*log(z0) - pow(z0,2)/2.0)){
+        if(f(y0)>f(z0)){
             ab.first = y0;
             ab.second = ab.second;
             y1 = z0;
@@ -185,8 +197,8 @@ double quadInt(double x1, double dx, double e1, double e2, bool print = true){
 
         if(!pass2_5){
         //3 пункт
-        f1 = 10*(x1)*log(x1) - pow(x1,2)/2.0;
-        f2 = 10*(x2)*log(x2) - pow(x2,2)/2.0;
+        f1 = f(x1);
+        f2 = f(x2);
         if(print)
             cout<<"(3."<<iterantion<<") f1 = "<<f1<<"; f2 = "<<f2<<";"<<endl;
         }
@@ -203,7 +215,7 @@ double quadInt(double x1, double dx, double e1, double e2, bool print = true){
 
         if(!pass2_5){
         //5 пункт
-        f3 = 10*(x3)*log(x3) - pow(x3,2)/2.0;
+        f3 = f(x3);
         if(print)
             cout<<"(5."<<iterantion<<") f3 = "<<f3<<";"<<endl;
         }
@@ -249,9 +261,9 @@ double quadInt(double x1, double dx, double e1, double e2, bool print = true){
                         if(xx[i] < xx[imin] and (xl == xx[imin] or xx[i] > xl)) xl = xx[i];
                         if(xx[i] > xx[imin] and (xr == xx[imin] or xx[i] < xr)) xr = xx[i];
                     }
-                    x1 = xl; f1 = 10*x1*log(x1) - x1*x1/2.0;
+                    x1 = xl; f1 = f(x1);
                     x2 = xx[imin]; f2 = ff[imin];
-                    x3 = xr; f3 = 10*x3*log(x3) - x3*x3/2.0;
+                    x3 = xr; f3 = f(x3);
                     pass2_5 = true;
                 } else {
                     x1 = x_;
@@ -274,9 +286,9 @@ int main()
     cout<<"["<<ab.first<<"; "<<ab.second<<"]"<<endl;
     cout<<endl<<"The Golden Ratio: "<<endl;
     double answ1 = gold(ab,0.05);
-    cout<<"f("<<answ1<<") = "<<10*(answ1)*log(answ1) - pow(answ1,2)/2.0<<endl;
+    cout<<"f("<<answ1<<") = "<<f(answ1)<<endl;
     cout<<endl<<"Quadratic Interpolation Method: "<<endl;
-    double answ2 = quadInt(0.5,0.2,0.1,0.1);
-    cout<<"f("<<answ2<<") = "<<10*(answ2)*log(answ2) - pow(answ2,2)/2.0<<endl;
+    double answ2 = quadInt(0.5,0.2,0.1,0.001);
+    cout<<"f("<<answ2<<") = "<<f(answ2)<<endl;
     return 0;
 }
