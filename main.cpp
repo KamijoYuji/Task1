@@ -236,7 +236,7 @@ double quadInt(double x1, double dx, double e1, double e2, bool print = true){
             x1 = Xmin;
         } else{
             x_ = 0.5 * ((pow(x2,2)-pow(x3,2))*f1+(pow(x3,2)-pow(x1,2))*f2+(pow(x1,2)-pow(x2,2))*f3)/temp_chislitel;
-            f_ = 10*(x_)*log(x_) - pow(x_,2)/2.0;
+            f_ = f(x_);
         }
         if(!pass8)
             cout<<"(7."<<iterantion<<") x_ = "<<x_<<"; f_ = "<<f_<<";"<<endl;
@@ -282,6 +282,10 @@ double quadInt(double x1, double dx, double e1, double e2, bool print = true){
 
 int main()
 {
+    cout << "FUNCTION f(x) = 10x*ln(x)-(x^2)/2 \nFind the minimum" << endl<<endl;
+
+
+
     cout<<"Swann's Method: "<<endl;
     pair<double, double> ab;
     bool flag;
@@ -326,7 +330,7 @@ int main()
             double x1, dx, e1, e2;
             cout << "Enter x1, dx, e1, e2 (Example: 0.5 0.2 0.1 0.1): ";
             cin >> x1 >> dx >> e1 >> e2;
-            answ2 = quadInt(0.5, 0.2, 0.1, 0.1);
+            answ2 = quadInt(x1, dx, e1, e2);
         }
         catch (invalid_argument a) {
             flag = true;
