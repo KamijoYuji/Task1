@@ -1,5 +1,6 @@
 #include <iostream>
 #include <math.h>
+#include <string>
 using namespace std;
 
 double f(double x)
@@ -282,13 +283,58 @@ double quadInt(double x1, double dx, double e1, double e2, bool print = true){
 int main()
 {
     cout<<"Swann's Method: "<<endl;
-    auto ab = swann(0.5,0.1);
+    pair<double, double> ab;
+    bool flag;
+    do {
+        try {
+            double x0, t;
+            cout << "Enter x0, t (Example: 0.5 0.1): ";
+            cin >> x0>>t;
+            flag = false;
+            ab = swann(x0, t);
+        }
+        catch (invalid_argument a) {
+            flag = true;
+            cout << a.what() << endl;
+        }
+    } while (flag);
     cout<<"["<<ab.first<<"; "<<ab.second<<"]"<<endl;
+
+
     cout<<endl<<"The Golden Ratio: "<<endl;
-    double answ1 = gold(ab,0.05);
+    double answ1;
+    do {
+        try {
+            double l;
+            cout << "Enter l (Example: 0.05): ";
+            cin >> l;
+            flag = false;
+            answ1 = gold(ab, l);
+        }
+        catch (invalid_argument a) {
+            flag = true;
+            cout << a.what() << endl;
+        }
+    } while (flag);
     cout<<"f("<<answ1<<") = "<<f(answ1)<<endl;
+
+
     cout<<endl<<"Quadratic Interpolation Method: "<<endl;
-    double answ2 = quadInt(0.5,0.2,0.1,0.001);
+    double answ2;
+    do {
+        try {
+            double x1, dx, e1, e2;
+            cout << "Enter x1, dx, e1, e2 (Example: 0.5 0.2 0.1 0.1): ";
+            cin >> x1 >> dx >> e1 >> e2;
+            answ2 = quadInt(0.5, 0.2, 0.1, 0.1);
+        }
+        catch (invalid_argument a) {
+            flag = true;
+            cout << a.what() << endl;
+        }
+    } while (flag);
     cout<<"f("<<answ2<<") = "<<f(answ2)<<endl;
+
+
     return 0;
 }
