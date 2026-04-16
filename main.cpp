@@ -190,35 +190,35 @@ double quadInt(double x1, double dx, double e1, double e2, bool print = true){
     int iterantion = 0;
     do {
         if(!pass2_5){
-        //2 пункт
-        x2 = x1+dx;
-        if(print)
-            cout<<"(2."<<iterantion<<") x2 = "<<x2<<";"<<endl;
+            //2 пункт
+            x2 = x1+dx;
+            if(print)
+                cout<<"(2."<<iterantion<<") x2 = "<<x2<<";"<<endl;
         }
 
         if(!pass2_5){
-        //3 пункт
-        f1 = f(x1);
-        f2 = f(x2);
-        if(print)
-            cout<<"(3."<<iterantion<<") f1 = "<<f1<<"; f2 = "<<f2<<";"<<endl;
+            //3 пункт
+            f1 = f(x1);
+            f2 = f(x2);
+            if(print)
+                cout<<"(3."<<iterantion<<") f1 = "<<f1<<"; f2 = "<<f2<<";"<<endl;
         }
 
         if(!pass2_5){
-        //4 пункт
-        if(f1>f2)
-            x3 = x1 + 2*dx;
-        else
-            x3 = x1 - dx;
-        if(print)
-            cout<<"(4."<<iterantion<<") f1"<<(f1>f2?">":"<=")<<"f2 -> x3 = "<<x3<<";"<<endl;
+            //4 пункт
+            if(f1>f2)
+                x3 = x1 + 2*dx;
+            else
+                x3 = x1 - dx;
+            if(print)
+                cout<<"(4."<<iterantion<<") f1"<<(f1>f2?">":"<=")<<"f2 -> x3 = "<<x3<<";"<<endl;
         }
 
         if(!pass2_5){
-        //5 пункт
-        f3 = f(x3);
-        if(print)
-            cout<<"(5."<<iterantion<<") f3 = "<<f3<<";"<<endl;
+            //5 пункт
+            f3 = f(x3);
+            if(print)
+                cout<<"(5."<<iterantion<<") f3 = "<<f3<<";"<<endl;
         }
 
         //6 пункт
@@ -273,7 +273,7 @@ double quadInt(double x1, double dx, double e1, double e2, bool print = true){
             }
             if(print) cout << "(8." << iterantion << ") x1 = " << x1 << "; x2 = " << x2 << "; x3 = " << x3 << ";\n";
         }
-    iterantion++;
+        iterantion++;
     } while (!end);
 
     return answ;
@@ -283,61 +283,71 @@ double quadInt(double x1, double dx, double e1, double e2, bool print = true){
 int main()
 {
     cout << "FUNCTION f(x) = 10x*ln(x)-(x^2)/2 \nFind the minimum" << endl<<endl;
-
-
+    bool oneMoreTime;
+    bool flag;
 
     cout<<"Swann's Method: "<<endl;
     pair<double, double> ab;
-    bool flag;
-    do {
-        try {
-            double x0, t;
-            cout << "Enter x0, t (Example: 0.5 0.1): ";
-            cin >> x0>>t;
-            flag = false;
-            ab = swann(x0, t);
-        }
-        catch (invalid_argument a) {
-            flag = true;
-            cout << a.what() << endl;
-        }
-    } while (flag);
-    cout<<"["<<ab.first<<"; "<<ab.second<<"]"<<endl;
-
+    do{
+        do {
+            try {
+                double x0, t;
+                cout << "Enter x0, t (Example: 0.5 0.1): ";
+                cin >> x0>>t;
+                flag = false;
+                ab = swann(x0, t);
+            }
+            catch (invalid_argument a) {
+                flag = true;
+                cout << a.what() << endl;
+            }
+        } while (flag);
+        cout<<"["<<ab.first<<"; "<<ab.second<<"]"<<endl;
+        cout<<"One more time? (yes - 1, no - 0): ";
+        cin>>oneMoreTime;
+    } while (oneMoreTime);
 
     cout<<endl<<"The Golden Ratio: "<<endl;
     double answ1;
-    do {
-        try {
-            double l;
-            cout << "Enter l (Example: 0.05): ";
-            cin >> l;
-            flag = false;
-            answ1 = gold(ab, l);
-        }
-        catch (invalid_argument a) {
-            flag = true;
-            cout << a.what() << endl;
-        }
-    } while (flag);
-    cout<<"f("<<answ1<<") = "<<f(answ1)<<endl;
+    do{
+        do {
+            try {
+                double l;
+                cout << "Enter l (Example: 0.05): ";
+                cin >> l;
+                flag = false;
+                answ1 = gold(ab, l);
+            }
+            catch (invalid_argument a) {
+                flag = true;
+                cout << a.what() << endl;
+            }
+        } while (flag);
+        cout<<"f("<<answ1<<") = "<<f(answ1)<<endl;
+        cout<<"One more time? (yes - 1, no - 0): ";
+        cin>>oneMoreTime;
+    } while (oneMoreTime);
 
 
     cout<<endl<<"Quadratic Interpolation Method: "<<endl;
     double answ2;
-    do {
-        try {
-            double x1, dx, e1, e2;
-            cout << "Enter x1, dx, e1, e2 (Example: 0.5 0.2 0.1 0.1): ";
-            cin >> x1 >> dx >> e1 >> e2;
-            answ2 = quadInt(x1, dx, e1, e2);
-        }
-        catch (invalid_argument a) {
-            flag = true;
-            cout << a.what() << endl;
-        }
-    } while (flag);
-    cout<<"f("<<answ2<<") = "<<f(answ2)<<endl;
+    do{
+        do {
+            try {
+                double x1, dx, e1, e2;
+                cout << "Enter x1, dx, e1, e2 (Example: 0.5 0.2 0.1 0.1): ";
+                cin >> x1 >> dx >> e1 >> e2;
+                answ2 = quadInt(x1, dx, e1, e2);
+            }
+            catch (invalid_argument a) {
+                flag = true;
+                cout << a.what() << endl;
+            }
+        } while (flag);
+        cout<<"f("<<answ2<<") = "<<f(answ2)<<endl;
+        cout<<"One more time? (yes - 1, no - 0): ";
+        cin>>oneMoreTime;
+    } while (oneMoreTime);
 
 
     return 0;
