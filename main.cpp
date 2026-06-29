@@ -2,6 +2,7 @@
 #include <vector>
 #include <cmath>
 #include <algorithm>
+#include <stdexcept>
 using namespace std;
 
 //I (целевая функция)
